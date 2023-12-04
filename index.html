@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Century Gothic', sans-serif;
+            background-color: rgb(189, 203, 96);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #display {
+            font-size: 10em;
+            margin: 20px;
+        }
+
+        #controls {
+            margin-top: 10px;
+        }
+
+        button {
+            font-family: 'Century Gothic', sans-serif;
+            background-color: rgb(245, 250, 246);
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="display">00:00:00</div>
+    <div id="controls">
+        <button onclick="startStopwatch()">Start</button>
+        <button onclick="stopStopwatch()">Stop</button>
+        <button onclick="resetStopwatch()">Reset</button>
+    </div>
+
+    <script>
+        let startTime;
+        let isRunning = false;
+
+        function startStopwatch() {
+            if (!isRunning) {
+                isRunning = true;
+                startTime = new Date().getTime();
+                updateDisplay();
+            }
+        }
+
+        function stopStopwatch() {
+            if (isRunning) {
+                isRunning = false;
+            }
+        }
+
+        function resetStopwatch() {
+            stopStopwatch();
+            startTime = null;
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            const currentTime = new Date().getTime();
+            let elapsedTime = 0;
+
+            if (startTime) {
+                elapsedTime = currentTime - startTime;
+            }
+
+            const formattedTime = formatTime(elapsedTime);
+            document.getElementById('display').innerHTML = formattedTime;
+
+            if (isRunning) {
+                requestAnimationFrame(updateDisplay);
+            }
+        }
+
+        function formatTime(milliseconds) {
+            const totalSeconds = Math.floor(milliseconds / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            const millisecondsPart = Math.floor((milliseconds % 1000) / 10);
+
+            return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(millisecondsPart).padStart(2, '0')}`;
+        }
+    </script>
+
+</body>
+</html>
